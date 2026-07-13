@@ -1,4 +1,4 @@
-# SuperStore Sales Performance Dashboard
+# SuperStore Sales Performance Analysis
 
 ## Overview
 An end-to-end Power BI dashboard analyzing sales, profit, and discount patterns across the Sample Superstore dataset (9,994 records, 2014–2017). The project covers data cleaning, data modeling, DAX measure creation- to uncover actionable business insights.
