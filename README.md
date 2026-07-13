@@ -149,4 +149,5 @@ deep analysis.pdf- indepth analysis of salesstore- category-wise per region.
 
 
 ## Author
-Pawan Kumar Lakhera Aspiring - Data Analyst | Power BI · SQL · Python #https://www.linkedin.com/in/pawan-lakhera-738429174/
+Pawan Kumar Lakhera Aspiring - Data Analyst | Power BI · SQL · Python,
+#https://www.linkedin.com/in/pawan-lakhera-738429174/
