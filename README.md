@@ -137,15 +137,15 @@ An end-to-end Power BI dashboard analyzing sales, profit, and discount patterns 
 - Real analytical insight comes from slicing data across multiple dimensions (category, region, sub-category) rather than relying on a single aggregate view.
 
 ## How to Use
-Clone or download this repository
-Open superstore.pbix in Power BI Desktop
-Use the slicers to filter any page
+Clone or download this repository,
+Open superstore.pbix in Power BI Desktop,
+Use the slicers to filter any page.
 
 ## Repository Contents
-superstore.pbix — Power BI dashboard file
-sample-superstore.csv — Source dataset
-superstore.Pdf - Dashboard page previews
-deep analysis.pdf- indepth analysis of salesstore- category-wise per region
+superstore.pbix — Power BI dashboard file,
+sample-superstore.csv — Source dataset,
+superstore.Pdf - Dashboard page previews,
+deep analysis.pdf- indepth analysis of salesstore- category-wise per region.
 
 
 ## Author
