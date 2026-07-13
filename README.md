@@ -135,4 +135,21 @@ An end-to-end Power BI dashboard analyzing sales, profit, and discount patterns 
 - Sales volume does not equal profitability — some of the highest-revenue customers and regions were actually loss-making once discounting was factored in.
 - Regional patterns are category-specific — the same region (Central) can be a company's best performer in one product line and worst in another.
 - Real analytical insight comes from slicing data across multiple dimensions (category, region, sub-category) rather than relying on a single aggregate view.
-# SupreStore-sales-analysis
+
+## How to Use
+Clone or download this repository
+Open Palo_Alto_Networks_HR_Dashboard.pbix in Power BI Desktop
+Use the Department, Job Role, attribution status, promotion gap score slicers to filter any page
+Explore the Career Path Clustering page to see the scatter-based segmentation
+
+## Repository Contents
+Palo_Alto Dashboard.pbix — Power BI dashboard file
+Palo_Alto_Networks.csv — Source dataset
+Palo_alto_network Research paper.pdf — Full EDA, methodology, and recommendations writeup
+`Palo_Alto dashboard.Pdf - Dashboard page previews
+`Palo_Alto dashboard.Pdf- Executive summary for government stakeholders
+app.py- check web link- https://yxk2gxsfqvlanpekg2tqqd.streamlit.app/
+requirements.txt
+
+## Author
+Pawan Kumar Lakhera Aspiring - Data Analyst | Power BI · SQL · Python #https://www.linkedin.com/in/pawan-lakhera-738429174/
