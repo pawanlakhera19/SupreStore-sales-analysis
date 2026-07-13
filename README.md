@@ -1,7 +1,7 @@
 # SuperStore Sales Performance Dashboard
 
 ## Overview
-An end-to-end Power BI dashboard analyzing sales, profit, and discount patterns across the Sample Superstore dataset (9,994 records, 2014–2017). The project covers data cleaning, data modeling, DAX measure creation, and a deep regional/category-level profitability analysis to uncover actionable business insights.
+An end-to-end Power BI dashboard analyzing sales, profit, and discount patterns across the Sample Superstore dataset (9,994 records, 2014–2017). The project covers data cleaning, data modeling, DAX measure creation- to uncover actionable business insights.
 
 ## Tools Used
 - **Power BI Desktop** (Power Query, Data Modeling, DAX)
@@ -17,9 +17,9 @@ An end-to-end Power BI dashboard analyzing sales, profit, and discount patterns 
 
 ## Dashboard Structure
 
-**Page 1 — Executive Overview:** KPI Cards (Total Sales, Total Profit, Total Orders, Profit Margin %), Monthly Sales Trend, Category-wise Sales & Profit, State-wise Sales Map, Segment-wise Sales Share (Donut), Region/Category/Segment/Year Slicers
+**Page 1 —** KPI Cards (Total Sales, Total Profit, Total Orders, Profit Margin %), Monthly Sales Trend, Category-wise Sales & Profit, State-wise Sales Map, Segment-wise Sales Share (Donut), Region/Category/Segment/Year Slicers
 
-**Page 2 — Deep Dive / Profitability Analysis:** Sub-Category Profit (with red/green conditional formatting), Discount vs Profit Scatter Chart, Top 10 Customers Table
+**Page 2 —** Sub-Category Profit (with red/green conditional formatting), Discount vs Profit Scatter Chart, Top 10 Customers Table
 
 ---
 
@@ -145,6 +145,7 @@ Use the slicers to filter any page
 superstore.pbix — Power BI dashboard file
 sample-superstore.csv — Source dataset
 superstore.Pdf - Dashboard page previews
+deep analysis.pdf- indepth analysis of salesstore- category-wise per region
 
 
 ## Author
