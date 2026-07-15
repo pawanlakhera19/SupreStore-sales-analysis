@@ -127,10 +127,10 @@ LIMIT 10;
 
 **Monthly Sales Trend:**
 ```sql
-SELECT YEAR(f.OrderDate) AS Yr, MONTH(f.OrderDate) AS Mo, SUM(f.Sales) AS Sales
+SELECT YEAR(f.OrderDate) AS Yr, MONTH(f.OrderDate) AS Mon, SUM(f.Sales) AS Sales
 FROM Fact_Orders f
 GROUP BY YEAR(f.OrderDate), MONTH(f.OrderDate)
-ORDER BY Yr, Mo;
+ORDER BY Yr, Mon;
 ```
 
 ---
