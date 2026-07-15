@@ -63,16 +63,15 @@ CREATE TABLE Dim_Customer AS
 SELECT DISTINCT CustomerID, CustomerName, Segment FROM SuperstoreRaw;
 
 CREATE TABLE Dim_Product AS
-SELECT ProductID, MAX(ProductName) AS ProductName, MAX(Category) AS Category, MAX(SubCategory) AS SubCategory
-FROM SuperstoreRaw GROUP BY ProductID;
+SELECT ProductID, MAX(ProductName) AS ProductName, MAX(Category) AS Category, MAX(SubCategory) AS SubCategory FROM SuperstoreRaw
+GROUP BY ProductID;
 
 CREATE TABLE Dim_Location AS
-SELECT PostalCode, MAX(City) AS City, MAX(State) AS State, MAX(Region) AS Region
-FROM SuperstoreRaw GROUP BY PostalCode;
+SELECT PostalCode, MAX(City) AS City, MAX(State) AS State, MAX(Region) AS Region FROM SuperstoreRaw
+GROUP BY PostalCode;
 
 CREATE TABLE Fact_Orders AS
-SELECT RowID, OrderID, OrderDate, ShipDate, ShipMode,
-       CustomerID, ProductID, PostalCode, Sales, Quantity, Discount, Profit
+SELECT RowID, OrderID, OrderDate, ShipDate, ShipMode,CustomerID, ProductID, PostalCode, Sales, Quantity, Discount, Profit
 FROM SuperstoreRaw;
 ```
 
