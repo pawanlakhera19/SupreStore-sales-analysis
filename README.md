@@ -1,25 +1,168 @@
-# SuperStore Sales Performance Analysis
+# SuperStore Sales Performance Analysis 
 
 ## Overview
-An end-to-end Power BI dashboard analyzing sales, profit, and discount patterns across the Sample Superstore dataset (9,994 records, 2014–2017). The project covers data cleaning, data modeling, DAX measure creation- to uncover actionable business insights.
+An end-to-end Power BI dashboard analyzing sales, profit, and discount patterns across the Sample Superstore dataset (9,994 records, 2014–2017). The project covers data cleaning, data modeling, DAX measure creation, and a deep regional,category-level profitability analysis to uncover actionable business insights.
 
 ## Tools Used
 - **Power BI Desktop** (Power Query, Data Modeling, DAX)
+- **MySQL** (data cleaning, star-schema design, joins, aggregate queries)
 - Star-schema-style relationships with a dedicated Date Table for time intelligence
 - Interactive slicers (Region, Category, Segment, Year) for cross-filtered analysis
 
 ## Data Preparation
-- Cleaned raw CSV data in Power Query — fixed date formats, set correct data types (Postal Code as text, dates as Date type)
-- Removed redundant columns (Row ID, Country — no variation across records)
-- Created calculated columns: **Profit Margin %**, **Discount Bucket**, **Shipping Days**
+- Fixed inconsistent date formats in `OrderDate` and `ShipDate` (mixed `MM/DD/YYYY` and `MM-DD-YY` formats) and converted them to proper MySQL `DATE` type
+- Set `PostalCode` as text (VARCHAR) from table creation to preserve leading zeros
+- Excluded the `Country` column from the star schema tables — no variation across records, so it added no analytical value
+- Created a **Profit Margin %** calculated column directly in the SQL view (`vw_Sales_Summary`) using `ROUND(Profit/Sales*100, 2)`
+- Additional calculated columns: **Discount Bucket**, **Shipping Days**
 - Built a dedicated **Date Table** using `CALENDAR()` with Year, Month, MonthNum, and Quarter columns, related to Order Date for accurate time intelligence
 - Created DAX measures: Total Sales, Total Profit, Total Orders (DISTINCTCOUNT), Profit Margin %, YoY Growth %, Sales LY (using SAMEPERIODLASTYEAR)
 
+## SQL Implementation (MySQL)
+
+Before building the Power BI dashboard, the raw CSV was imported into **MySQL** and modeled as a star schema (one fact table + three dimension tables), then queried using joins and aggregations to practice and demonstrate core SQL skills alongside the Power BI work.
+
+### Data Cleaning Challenges Faced (and Fixed)
+
+- **Mixed date formats:** The `OrderDate` and `ShipDate` columns contained two inconsistent formats within the same column — some rows as `MM/DD/YYYY` (e.g., `6/16/2016`) and others as `MM-DD-YY` (e.g., `11-08-16`). A direct `STR_TO_DATE()` conversion failed with an "Incorrect datetime value" error until a `CASE` statement was used to detect and convert each format correctly:
+
+```sql
+UPDATE SuperstoreRaw
+SET OrderDate_Fixed = 
+    CASE 
+        WHEN OrderDate LIKE '%/%' THEN STR_TO_DATE(OrderDate, '%m/%d/%Y')
+        WHEN OrderDate LIKE '%-%' THEN STR_TO_DATE(OrderDate, '%m-%d-%y')
+        ELSE NULL
+    END,
+    ShipDate_Fixed = 
+    CASE 
+        WHEN ShipDate LIKE '%/%' THEN STR_TO_DATE(ShipDate, '%m/%d/%Y')
+        WHEN ShipDate LIKE '%-%' THEN STR_TO_DATE(ShipDate, '%m-%d-%y')
+        ELSE NULL
+    END;
+```
+
+- **Fan-out duplicates in dimension tables:** Building `Dim_Product` and `Dim_Location` with `SELECT DISTINCT` initially produced more rows than unique IDs, because the same `ProductID`/`PostalCode` occasionally appeared with slightly different attribute values in the source data. This caused joins to multiply rows (9,994 → 10,372). Fixed by grouping explicitly on the key column:
+
+```sql
+CREATE TABLE Dim_Product AS
+SELECT ProductID, 
+       MAX(ProductName) AS ProductName, 
+       MAX(Category) AS Category, 
+       MAX(SubCategory) AS SubCategory
+FROM SuperstoreRaw
+GROUP BY ProductID;
+```
+
+The same fix was applied to `Dim_Location` (grouped by `PostalCode`), after which the joined view correctly returned exactly 9,994 rows.
+
+### Star Schema Design
+
+```sql
+CREATE TABLE Dim_Customer AS
+SELECT DISTINCT CustomerID, CustomerName, Segment FROM SuperstoreRaw;
+
+CREATE TABLE Dim_Product AS
+SELECT ProductID, MAX(ProductName) AS ProductName, MAX(Category) AS Category, MAX(SubCategory) AS SubCategory
+FROM SuperstoreRaw GROUP BY ProductID;
+
+CREATE TABLE Dim_Location AS
+SELECT PostalCode, MAX(City) AS City, MAX(State) AS State, MAX(Region) AS Region
+FROM SuperstoreRaw GROUP BY PostalCode;
+
+CREATE TABLE Fact_Orders AS
+SELECT RowID, OrderID, OrderDate, ShipDate, ShipMode,
+       CustomerID, ProductID, PostalCode, Sales, Quantity, Discount, Profit
+FROM SuperstoreRaw;
+```
+
+### Consolidated View
+
+```sql
+CREATE VIEW vw_Sales_Summary AS
+SELECT f.OrderID, f.OrderDate, f.ShipDate, f.ShipMode,
+       c.CustomerName, c.Segment,
+       p.Category, p.SubCategory, p.ProductName,
+       l.Region, l.State, l.City,
+       f.Sales, f.Quantity, f.Discount, f.Profit,
+       ROUND(f.Profit/NULLIF(f.Sales,0)*100, 2) AS Profit_Margin_Pct
+FROM Fact_Orders f
+JOIN Dim_Customer c ON f.CustomerID = c.CustomerID
+JOIN Dim_Product p ON f.ProductID = p.ProductID
+JOIN Dim_Location l ON f.PostalCode = l.PostalCode;
+```
+
+### Aggregation Queries
+
+**Region-wise Sales & Profit:**
+```sql
+SELECT l.Region, SUM(f.Sales) AS Total_Sales, SUM(f.Profit) AS Total_Profit
+FROM Fact_Orders f 
+JOIN Dim_Location l ON f.PostalCode = l.PostalCode
+GROUP BY l.Region
+ORDER BY Total_Sales DESC;
+```
+
+**Category-wise Profit Margin:**
+```sql
+SELECT p.Category, 
+       SUM(f.Sales) AS Sales, SUM(f.Profit) AS Profit,
+       ROUND(SUM(f.Profit)/SUM(f.Sales)*100, 2) AS Profit_Margin_Pct
+FROM Fact_Orders f 
+JOIN Dim_Product p ON f.ProductID = p.ProductID
+GROUP BY p.Category;
+```
+
+**Top 10 Customers by Sales:**
+```sql
+SELECT c.CustomerName, SUM(f.Sales) AS Total_Sales
+FROM Fact_Orders f 
+JOIN Dim_Customer c ON f.CustomerID = c.CustomerID
+GROUP BY c.CustomerName
+ORDER BY Total_Sales DESC
+LIMIT 10;
+```
+
+**Monthly Sales Trend:**
+```sql
+SELECT YEAR(f.OrderDate) AS Yr, MONTH(f.OrderDate) AS Mo, SUM(f.Sales) AS Sales
+FROM Fact_Orders f
+GROUP BY YEAR(f.OrderDate), MONTH(f.OrderDate)
+ORDER BY Yr, Mo;
+```
+
+**Customer Ranking (Window Function):**
+```sql
+SELECT CustomerName, SUM(Sales) AS Total_Sales,
+       RANK() OVER (ORDER BY SUM(Sales) DESC) AS Sales_Rank
+FROM vw_Sales_Summary
+GROUP BY CustomerName;
+```
+
+**Above-Average Profit Customers (Subquery):**
+```sql
+SELECT CustomerName, SUM(Profit) AS Total_Profit
+FROM vw_Sales_Summary
+GROUP BY CustomerName
+HAVING SUM(Profit) > (SELECT AVG(Profit) FROM vw_Sales_Summary);
+```
+
+**Running Total of Monthly Sales (Window Function):**
+```sql
+SELECT YEAR(OrderDate) AS Yr, MONTH(OrderDate) AS Mo, SUM(Sales) AS Monthly_Sales,
+       SUM(SUM(Sales)) OVER (ORDER BY YEAR(OrderDate), MONTH(OrderDate)) AS Running_Total
+FROM vw_Sales_Summary
+GROUP BY YEAR(OrderDate), MONTH(OrderDate)
+ORDER BY Yr, Mo;
+```
+
+---
+
 ## Dashboard Structure
 
-**Page 1 —** KPI Cards (Total Sales, Total Profit, Total Orders, Profit Margin %), Monthly Sales Trend, Category-wise Sales & Profit, State-wise Sales Map, Segment-wise Sales Share (Donut), Region/Category/Segment/Year Slicers
+**Page 1 — :** KPI Cards (Total Sales, Total Profit, Total Orders, Profit Margin %), Monthly Sales Trend, Category-wise Sales & Profit, State-wise Sales Map, Segment-wise Sales Share (Donut), Region/Category/Segment/Year Slicers
 
-**Page 2 —** Sub-Category Profit (with red/green conditional formatting), Discount vs Profit Scatter Chart, Top 10 Customers Table
+**Page 2 —:** Sub-Category Profit (with red/green conditional formatting), Discount vs Profit Scatter Chart, Top 10 Customers Table
 
 ---
 
@@ -135,19 +278,21 @@ An end-to-end Power BI dashboard analyzing sales, profit, and discount patterns 
 - Sales volume does not equal profitability — some of the highest-revenue customers and regions were actually loss-making once discounting was factored in.
 - Regional patterns are category-specific — the same region (Central) can be a company's best performer in one product line and worst in another.
 - Real analytical insight comes from slicing data across multiple dimensions (category, region, sub-category) rather than relying on a single aggregate view.
+- Real-world data is rarely clean — inconsistent date formats and near-duplicate keys in dimension tables can silently distort join results (fan-out), so   validating row counts after every join is essential.
 
 ## How to Use
-Clone or download this repository,
-Open superstore.pbix in Power BI Desktop,
-Use the slicers to filter any page.
+- Clone or download this repository,
+- Open superstore.pbix in Power BI Desktop,
+- Use the slicers to filter any page.
 
 ## Repository Contents
-superstore.pbix — Power BI dashboard file,
-sample-superstore.csv — Source dataset,
-superstore.Pdf - Dashboard page previews,
-deep analysis.pdf- indepth analysis of salesstore- category-wise per region.
-
+- superstore.pbix — Power BI dashboard file,
+- sample-superstore.csv — Source dataset,
+- superstore.Pdf - Dashboard page previews,
+- deep analysis.pdf- indepth analysis of salesstore- category-wise per region.
 
 ## Author
-Pawan Kumar Lakhera Aspiring - Data Analyst | Power BI · SQL · Python,
-#https://www.linkedin.com/in/pawan-lakhera-738429174/
+- Pawan Kumar Lakhera Aspiring - Data Analyst | Power BI · SQL · Python,
+- Linkedin- #https://www.linkedin.com/in/pawan-lakhera-738429174/
+
+  
