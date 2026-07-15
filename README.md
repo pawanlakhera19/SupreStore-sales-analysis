@@ -14,9 +14,12 @@ An end-to-end Power BI dashboard analyzing sales, profit, and discount patterns 
 - Set `PostalCode` as text (VARCHAR) from table creation to preserve leading zeros
 - Excluded the `Country` column from the star schema tables — no variation across records, so it added no analytical value
 - Created a **Profit Margin %** calculated column directly in the SQL view (`vw_Sales_Summary`) using `ROUND(Profit/Sales*100, 2)`
-- Additional calculated columns: **Discount Bucket**, **Shipping Days**
+-- Connected Power BI to the MySQL database (superstore_db) and imported the star-schema tables (Dim_Customer, Dim_Product, Dim_Location, Fact_Orders)
+- Built relationships in Model View: Dim_Customer, Dim_Product, and Dim_Location each linked to Fact_Orders (One-to-Many) via CustomerID, ProductID, and PostalCode respectively
+- Built a dedicated Date Table using CALENDAR() and related it to Fact_Orders via OrderDate (One-to-Many) for accurate time intelligence
 - Built a dedicated **Date Table** using `CALENDAR()` with Year, Month, MonthNum, and Quarter columns, related to Order Date for accurate time intelligence
 - Created DAX measures: Total Sales, Total Profit, Total Orders (DISTINCTCOUNT), Profit Margin %, YoY Growth %, Sales LY (using SAMEPERIODLASTYEAR)
+- - Additional calculated columns: **Discount Bucket**, **Shipping Days**
 
 ## SQL Implementation (MySQL)
 
