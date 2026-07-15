@@ -283,11 +283,13 @@ ORDER BY Yr, Mo;
 ## How to Use
 - Clone or download this repository,
 - Open superstore.pbix in Power BI Desktop,
-- Use the slicers to filter any page.
+- Use the slicers to filter any page,
+- open superstore sales.sql in MySQL
 
 ## Repository Contents
 - superstore.pbix — Power BI dashboard file,
 - sample-superstore.csv — Source dataset,
+- superstore sales.sql - queries section
 - superstore.Pdf - Dashboard page previews,
 - deep analysis.pdf- indepth analysis of salesstore- category-wise per region.
 
