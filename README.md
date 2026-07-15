@@ -19,7 +19,7 @@ An end-to-end Power BI dashboard analyzing sales, profit, and discount patterns 
 - Built a dedicated Date Table using CALENDAR() and related it to Fact_Orders via OrderDate (One-to-Many) for accurate time intelligence
 - Built a dedicated **Date Table** using `CALENDAR()` with Year, Month, MonthNum, and Quarter columns, related to Order Date for accurate time intelligence
 - Created DAX measures: Total Sales, Total Profit, Total Orders (DISTINCTCOUNT), Profit Margin %, YoY Growth %, Sales LY (using SAMEPERIODLASTYEAR)
-- - Additional calculated columns: **Discount Bucket**, **Shipping Days**
+- Additional calculated columns: **Discount Bucket**, **Shipping Days**
 
 ## SQL Implementation (MySQL)
 
