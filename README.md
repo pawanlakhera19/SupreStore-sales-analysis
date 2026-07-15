@@ -131,31 +131,6 @@ GROUP BY YEAR(f.OrderDate), MONTH(f.OrderDate)
 ORDER BY Yr, Mo;
 ```
 
-**Customer Ranking (Window Function):**
-```sql
-SELECT CustomerName, SUM(Sales) AS Total_Sales,
-       RANK() OVER (ORDER BY SUM(Sales) DESC) AS Sales_Rank
-FROM vw_Sales_Summary
-GROUP BY CustomerName;
-```
-
-**Above-Average Profit Customers (Subquery):**
-```sql
-SELECT CustomerName, SUM(Profit) AS Total_Profit
-FROM vw_Sales_Summary
-GROUP BY CustomerName
-HAVING SUM(Profit) > (SELECT AVG(Profit) FROM vw_Sales_Summary);
-```
-
-**Running Total of Monthly Sales (Window Function):**
-```sql
-SELECT YEAR(OrderDate) AS Yr, MONTH(OrderDate) AS Mo, SUM(Sales) AS Monthly_Sales,
-       SUM(SUM(Sales)) OVER (ORDER BY YEAR(OrderDate), MONTH(OrderDate)) AS Running_Total
-FROM vw_Sales_Summary
-GROUP BY YEAR(OrderDate), MONTH(OrderDate)
-ORDER BY Yr, Mo;
-```
-
 ---
 
 ## Dashboard Structure
