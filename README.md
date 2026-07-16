@@ -160,10 +160,11 @@ ORDER BY Yr, Mon;
 
 | Sub-Category | Central | East | South | West | Total |
 |---|---|---|---|---|---|
-| Tables | -3.6K | -11.0K | -4.6K | +1.5K | **-18K** |
+| Tables | -3.6K | **-11.0K** | -4.6K | **+1.5K** | **-18K** |
 | Bookcases | -2.0K | -1.2K | +1.3K | -1.6K | **-3K** |
 | Furnishings | -3.9K | +5.9K | +3.4K | +7.6K | **13K** |
 | Chairs | +6.6K | +9.4K | +6.6K | +4.0K | **27K** |
+| Region Total | -2.87K | +3.05K | +6.77K | +11.50K | **18.45K**
 
 **Key Findings:**
 - Furniture's weak overall margin (2.49%) is driven almost entirely by Tables (-18K loss company-wide). 61% of that loss (-11.0K) comes from the **East region alone**, while Tables is actually profitable in the West (+1.5K) — proving the product itself isn't the problem, regional discount practices are.
@@ -174,7 +175,7 @@ ORDER BY Yr, Mon;
 
 ---
 
-### 2. Office Supplies Category — Overall Margin: 17.04% (Sales: 719.05K | Profit: 122.49K)
+### 2. Office Supplies Category — Overall Margin: 17.04% (Sales: 719.05K | Profit: 122.49K | Profit Margin: 17.04% (much healthier than Furniture's 2.49%))
 
 **Region-wise breakdown:**
 
@@ -189,10 +190,10 @@ ORDER BY Yr, Mon;
 
 | Sub-Category | Central | East | South | West | Total |
 |---|---|---|---|---|---|
-| Appliances | -2.6K | +8.4K | +4.1K | +8.3K | **18K** |
-| Binders | -1.0K | +11.3K | +3.9K | +16.1K | **30K** |
+| Appliances | **-2.6K** | +8.4K | +4.1K | +8.3K | **18K** |
+| Binders | **-1.0K** | +11.3K | +3.9K | +16.1K | **30K** |
 | Paper | +7.0K | +9.0K | +5.9K | +12.1K | **34K** |
-| Supplies | -0.7K | -1.2K | 0.0K | +0.6K | **-1K** |
+| Supplies | **-0.7K** | -1.2K | 0.0K | +0.6K | **-1K** |
 
 **Key Findings:**
 - Office Supplies maintains a healthy 17.04% overall margin, but **Central drags the average down to just 5.32%** — the lowest of all regions.
@@ -211,7 +212,7 @@ ORDER BY Yr, Mon;
 | Region | Sales | Profit | Margin % |
 |---|---|---|---|
 | Central | 170.42K | 33.70K | **19.77%** |
-| East | 264.97K | 47.46K | 17.91% |
+| East | 264.97K | **47.46K** | 17.91% |
 | South | 148.77K | 19.99K | **13.44%** |
 | West | 251.99K | 44.30K | 17.58% |
 
@@ -219,7 +220,7 @@ ORDER BY Yr, Mon;
 
 | Sub-Category | Central | East | South | West | Total |
 |---|---|---|---|---|---|
-| Machines | -1.5K | +6.9K | -1.4K | -0.6K | **~3K** |
+| **Machines** | **-1.5K** | +6.9K | **-1.4K** | **-0.6K** | **~3K** |
 | Accessories | +7.3K | +11.2K | +7.0K | +16.5K | **42K** |
 | Phones | +12.3K | +12.3K | +10.8K | +9.1K | **45K** |
 | Copiers | +15.6K | +17.0K | +3.7K | +19.3K | **56K** |
